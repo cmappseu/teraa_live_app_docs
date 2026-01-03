@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeraLIVE - Ultimate Live Streaming & Social App | Flutter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #fe2c55;
+            --secondary: #25f4ee;
+            --bg-dark: #000000;
+            --bg-card: #121212;
+            --bg-card-hover: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --gradient-1: linear-gradient(135deg, #fe2c55 0%, #ff6b6b 100%);
+            --gradient-2: linear-gradient(135deg, #25f4ee 0%, #00d4ff 100%);
+            --gradient-3: linear-gradient(135deg, #fe2c55 0%, #25f4ee 100%);
+        }
+        body { padding-top: 60px; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-primary); overflow-x: hidden; line-height: 1.6; }
+
+        /* Hero */
+        .hero { min-height: auto; padding: 40px 20px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 20px; }
+        .hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 30%, rgba(254, 44, 85, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(37, 244, 238, 0.15) 0%, transparent 50%); animation: rotate 30s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .hero-content { position: relative; z-index: 1; text-align: center; max-width: 1400px; }
+        .logo { font-size: 3.5rem; font-weight: 900; background: var(--gradient-3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 20px; animation: glow 2s ease-in-out infinite alternate; }
+        @keyframes glow { from { filter: drop-shadow(0 0 20px rgba(254, 44, 85, 0.5)); } to { filter: drop-shadow(0 0 40px rgba(37, 244, 238, 0.5)); } }
+        .tagline { font-size: 1.4rem; color: var(--text-secondary); margin-bottom: 30px; font-weight: 300; }
+        .hero-badges { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; }
+        .badge { padding: 10px 20px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; }
+        .badge-primary { background: var(--gradient-1); color: white; }
+        .badge-secondary { background: var(--gradient-2); color: black; }
+        .badge-outline { border: 2px solid var(--primary); color: var(--primary); }
+
+        /* Phone Showcase */
+        .phone-showcase { display: flex; justify-content: center; gap: 25px; margin: 40px 0; flex-wrap: wrap; }
+        .phone-frame { width: 180px; height: 380px; background: #1a1a1a; border-radius: 40px; padding: 12px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), inset 0 0 0 2px rgba(255, 255, 255, 0.1); transform: perspective(1000px) rotateY(var(--rotate, 0deg)); transition: transform 0.5s ease; }
+        .phone-frame:hover { transform: perspective(1000px) rotateY(0deg) scale(1.05); }
+        .phone-frame:nth-child(1) { --rotate: 8deg; }
+        .phone-frame:nth-child(2) { --rotate: 4deg; }
+        .phone-frame:nth-child(3) { --rotate: 0deg; transform: scale(1.05); }
+        .phone-frame:nth-child(4) { --rotate: -4deg; }
+        .phone-frame:nth-child(5) { --rotate: -8deg; }
+        .phone-screen { width: 100%; height: 100%; border-radius: 30px; overflow: hidden; background: #000; }
+        .phone-screen img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Stats */
+        .stats { display: flex; justify-content: center; gap: 50px; margin: 30px 0; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 3rem; font-weight: 800; background: var(--gradient-3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .stat-label { color: var(--text-secondary); font-size: 1rem; margin-top: 5px; }
+
+        /* Sections */
+        section { padding: 100px 20px; max-width: 1400px; margin: 0 auto; }
+        .section-title { font-size: 2.5rem; font-weight: 800; text-align: center; margin-bottom: 20px; }
+        .section-title span { background: var(--gradient-3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .section-subtitle { text-align: center; color: var(--text-secondary); font-size: 1.1rem; max-width: 700px; margin: 0 auto 60px; }
+
+        /* Features Grid */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+        .feature-card { background: var(--bg-card); border-radius: 20px; padding: 30px; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--gradient-3); transform: scaleX(0); transition: transform 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); border-color: rgba(254, 44, 85, 0.3); }
+        .feature-card:hover::before { transform: scaleX(1); }
+        .feature-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 15px; }
+        .feature-icon.red { background: rgba(254, 44, 85, 0.2); }
+        .feature-icon.cyan { background: rgba(37, 244, 238, 0.2); }
+        .feature-icon.purple { background: rgba(138, 43, 226, 0.2); }
+        .feature-icon.gold { background: rgba(255, 215, 0, 0.2); }
+        .feature-icon.green { background: rgba(34, 197, 94, 0.2); }
+        .feature-icon.blue { background: rgba(59, 130, 246, 0.2); }
+        .feature-card h3 { font-size: 1.2rem; margin-bottom: 10px; font-weight: 700; }
+        .feature-card p { color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem; }
+        .feature-card ul { color: var(--text-secondary); font-size: 0.9rem; margin-top: 10px; padding-left: 20px; }
+        .feature-card ul li { margin: 5px 0; }
+
+        /* Screenshot Gallery */
+        .gallery-section { background: linear-gradient(180deg, transparent 0%, rgba(254, 44, 85, 0.05) 50%, transparent 100%); padding: 100px 0; }
+        .gallery-container { max-width: 100%; overflow: hidden; }
+        .gallery-row { display: flex; gap: 20px; animation: scroll 50s linear infinite; padding: 20px 0; }
+        .gallery-row.reverse { animation-direction: reverse; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .gallery-item { flex-shrink: 0; width: 220px; height: 450px; border-radius: 24px; overflow: hidden; background: var(--bg-card); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3); }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Tech Stack */
+        .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        .tech-item { background: var(--bg-card); border-radius: 12px; padding: 20px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.3s ease; }
+        .tech-item:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .tech-item .icon { font-size: 2rem; margin-bottom: 10px; }
+        .tech-item h4 { font-size: 0.95rem; margin-bottom: 5px; }
+        .tech-item p { color: var(--text-secondary); font-size: 0.8rem; }
+
+        /* Screens List */
+        .screens-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .screen-item { background: var(--bg-card); border-radius: 12px; padding: 15px 20px; border: 1px solid rgba(255, 255, 255, 0.05); display: flex; align-items: center; gap: 12px; }
+        .screen-item .num { width: 30px; height: 30px; border-radius: 50%; background: var(--gradient-1); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; flex-shrink: 0; }
+        .screen-item span { font-size: 0.9rem; }
+
+        /* Footer */
+        footer { text-align: center; padding: 60px 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        footer p { color: var(--text-secondary); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .tagline { font-size: 1.1rem; }
+            .section-title { font-size: 2rem; }
+            .phone-frame { width: 240px; height: 500px; }
+            .phone-frame:nth-child(1), .phone-frame:nth-child(3) { display: none; }
+        .phone-frame:nth-child(4) { --rotate: -4deg; }
+        .phone-frame:nth-child(5) { --rotate: -8deg; }
+            .stats { gap: 30px; }
+            .stat-value { font-size: 2rem; }
+            .pricing-features { columns: 1; }
+        }
+            /* Documentation Navigation */
+        .doc-nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .doc-nav-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; }
+        .doc-nav-logo { font-size: 1.2rem; font-weight: 800; background: linear-gradient(135deg, #fe2c55 0%, #25f4ee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .doc-nav-links { display: flex; gap: 5px; flex-wrap: wrap; }
+        .doc-nav-links a { color: #a0a0a0; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; }
+        .doc-nav-links a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+        .doc-nav-links a.active { color: #fe2c55; background: rgba(254,44,85,0.15); }
+    </style>
+</head>
+<body>
+    <nav class="doc-nav"><div class="doc-nav-inner"><a href="index.html" class="doc-nav-logo">TeraLIVE Docs</a><div class="doc-nav-links"><a href="index.html">Setup Guide</a><a href="app.html" class="active">Mobile App</a><a href="api.html">API Reference</a><a href="admin.html">Admin Panel</a><a href="agency.html">Agency Panel</a></div></div></nav>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="logo">TeraLIVE</h1>
+            <p class="tagline">Ultimate Live Streaming & Social Entertainment Platform</p>
+            <div class="hero-badges">
+                <span class="badge badge-primary">Flutter 3.38.5</span>
+                <span class="badge badge-secondary">ZEGOCLOUD SDK</span>
+                <span class="badge badge-outline">iOS & Android</span>
+                <span class="badge badge-primary">TikTok Style UI</span>
+                <span class="badge badge-secondary">100+ Features</span>
+            </div>
+            <div class="phone-showcase">
+                <div class="phone-frame"><div class="phone-screen"><img src="appscreens/Screenshot_20260103_035714.png" alt="TeraLIVE"></div></div>
+                <div class="phone-frame"><div class="phone-screen"><img src="appscreens/Screenshot_20260103_035732.png" alt="TeraLIVE"></div></div>
+                <div class="phone-frame"><div class="phone-screen"><img src="appscreens/Screenshot_20260103_040001.png" alt="TeraLIVE"></div></div>
+                <div class="phone-frame"><div class="phone-screen"><img src="appscreens/Screenshot_20260103_040057.png" alt="TeraLIVE"></div></div>
+                <div class="phone-frame"><div class="phone-screen"><img src="appscreens/Screenshot_20260103_040228.png" alt="TeraLIVE"></div></div>
+            </div>
+            <div class="stats">
+                <div class="stat-item"><div class="stat-value">37+</div><div class="stat-label">Screens</div></div>
+                <div class="stat-item"><div class="stat-value">42+</div><div class="stat-label">Widgets</div></div>
+                <div class="stat-item"><div class="stat-value">16</div><div class="stat-label">Services</div></div>
+                <div class="stat-item"><div class="stat-value">12</div><div class="stat-label">Models</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Streaming Features -->
+    <section>
+        <h2 class="section-title"><span>Live Streaming</span> Features</h2>
+        <p class="section-subtitle">Professional-grade live streaming with all the features you need</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon red">🎬</div>
+                <h3>HD Live Broadcasting</h3>
+                <p>Full HD video streaming with ZEGOCLOUD SDK integration. Ultra-low latency for real-time interaction.</p>
+                <ul>
+                    <li>Camera/mic toggle controls</li>
+                    <li>Front/back camera flip</li>
+                    <li>Stream modes: Camera, Audio-only, Image background</li>
+                    <li>Beauty filters support</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon cyan">⚔️</div>
+                <h3>PK Battle System</h3>
+                <p>Exciting streamer vs streamer battles with split-screen view and real-time scoring.</p>
+                <ul>
+                    <li>5-minute battle duration</li>
+                    <li>Real-time score tracking</li>
+                    <li>Animated VS badge & fire effects</li>
+                    <li>Winner/loser celebration overlay</li>
+                    <li>Challenge popup system</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon purple">💬</div>
+                <h3>Live Chat & Reactions</h3>
+                <p>Engaging real-time chat with level badges and host highlighting.</p>
+                <ul>
+                    <li>Floating hearts animation</li>
+                    <li>Level badges in chat</li>
+                    <li>Host message highlighting</li>
+                    <li>Mute/unmute viewers</li>
+                    <li>Kick users from room</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon gold">🎁</div>
+                <h3>Virtual Gift System</h3>
+                <p>Stunning animated gifts with Lottie/SVGA effects and combo tracking.</p>
+                <ul>
+                    <li>SVGA, GIF, MP4 animations</li>
+                    <li>TikTok-style gift overlay</li>
+                    <li>Gift combo counter</li>
+                    <li>Big gift celebration screen</li>
+                    <li>Gift panel with categories</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon green">🔒</div>
+                <h3>Private & Paid Rooms</h3>
+                <p>Monetize with password-protected and coin-based entry rooms.</p>
+                <ul>
+                    <li>Password protection</li>
+                    <li>Coin/gift entry fee</li>
+                    <li>Join request system</li>
+                    <li>Accept/reject requests</li>
+                    <li>Access control</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon blue">📱</div>
+                <h3>Background & PiP</h3>
+                <p>Keep watching while using other apps.</p>
+                <ul>
+                    <li>Foreground service</li>
+                    <li>Picture-in-Picture mode</li>
+                    <li>Battery optimization</li>
+                    <li>Notification persistence</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Voice & Party Rooms -->
+    <section>
+        <h2 class="section-title"><span>Voice & Party</span> Rooms</h2>
+        <p class="section-subtitle">Multi-user audio and video rooms for social interaction</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon purple">🎤</div>
+                <h3>Voice Rooms (8 Seats)</h3>
+                <p>Group voice chat with seat management and DJ mode.</p>
+                <ul>
+                    <li>Up to 8 participants</li>
+                    <li>Seat lock/unlock controls</li>
+                    <li>Mute/unmute per seat</li>
+                    <li>Kick from seat</li>
+                    <li>Listener mode</li>
+                    <li>Custom backgrounds</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon cyan">🎉</div>
+                <h3>Party Rooms (4-8 Video)</h3>
+                <p>Group video rooms perfect for watch parties and games.</p>
+                <ul>
+                    <li>Video grid layout</li>
+                    <li>Camera on/off toggle</li>
+                    <li>Mic mute control</li>
+                    <li>Host moderation tools</li>
+                    <li>Viewer mode support</li>
+                    <li>Join request system</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon gold">🎵</div>
+                <h3>DJ Mode</h3>
+                <p>Play music for your room with synchronized playback.</p>
+                <ul>
+                    <li>YouTube music integration</li>
+                    <li>Track queue management</li>
+                    <li>Volume control</li>
+                    <li>Sync to viewers</li>
+                    <li>Mini player widget</li>
+                    <li>Full DJ panel</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon red">📩</div>
+                <h3>Invitation System</h3>
+                <p>Invite users to join your room.</p>
+                <ul>
+                    <li>Send room invitations</li>
+                    <li>Invitation popup</li>
+                    <li>Accept/decline flow</li>
+                    <li>Invite users sheet</li>
+                    <li>Real-time notifications</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Features -->
+    <section>
+        <h2 class="section-title"><span>Social</span> Features</h2>
+        <p class="section-subtitle">Complete social networking capabilities</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon green">👥</div>
+                <h3>Random Matching</h3>
+                <p>TikTok-style random video matching system.</p>
+                <ul>
+                    <li>Gender-based filtering</li>
+                    <li>Search animation</li>
+                    <li>Match found popup</li>
+                    <li>1-on-1 video calls</li>
+                    <li>Skip/accept controls</li>
+                    <li>Call history</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon blue">📱</div>
+                <h3>Social Feed (Posts)</h3>
+                <p>TikTok-style vertical feed with engagement.</p>
+                <ul>
+                    <li>Photo/video posts</li>
+                    <li>For You & Following tabs</li>
+                    <li>Like & comment</li>
+                    <li>Save/bookmark posts</li>
+                    <li>Paid content unlock</li>
+                    <li>Trending & featured</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon purple">💬</div>
+                <h3>Direct Messaging</h3>
+                <p>Real-time private messaging system.</p>
+                <ul>
+                    <li>1-on-1 chat</li>
+                    <li>Unread counter badge</li>
+                    <li>Real-time delivery</li>
+                    <li>Online status</li>
+                    <li>Chat history</li>
+                    <li>Message notifications</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon red">❤️</div>
+                <h3>Follow System</h3>
+                <p>Complete follow/following functionality.</p>
+                <ul>
+                    <li>Follow/unfollow users</li>
+                    <li>Followers list</li>
+                    <li>Following list</li>
+                    <li>Follow notifications</li>
+                    <li>Following feed</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Monetization & VIP -->
+    <section>
+        <h2 class="section-title"><span>Monetization</span> & VIP</h2>
+        <p class="section-subtitle">Multiple revenue streams built-in</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon gold">💰</div>
+                <h3>Coin System</h3>
+                <p>Virtual currency wallet with purchase options.</p>
+                <ul>
+                    <li>Multiple coin packages</li>
+                    <li>Bonus coins system</li>
+                    <li>Purchase history</li>
+                    <li>Balance tracking</li>
+                    <li>Transaction logs</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon purple">👑</div>
+                <h3>VIP Membership</h3>
+                <p>Premium subscription with exclusive perks.</p>
+                <ul>
+                    <li>VIP tier system (1-10)</li>
+                    <li>Exclusive badges & frames</li>
+                    <li>Priority search placement</li>
+                    <li>Daily bonus coins</li>
+                    <li>VIP-only features</li>
+                    <li>Expiration tracking</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon cyan">📈</div>
+                <h3>Level & XP System</h3>
+                <p>Gamified progression system.</p>
+                <ul>
+                    <li>60+ levels</li>
+                    <li>XP progress tracking</li>
+                    <li>Level-up animation</li>
+                    <li>Level badges in chat</li>
+                    <li>Animated level avatars</li>
+                    <li>Level-based privileges</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon green">🏆</div>
+                <h3>Leaderboards</h3>
+                <p>Competitive ranking system.</p>
+                <ul>
+                    <li>Top gifters ranking</li>
+                    <li>Top streamers ranking</li>
+                    <li>Top earners ranking</li>
+                    <li>Most followed users</li>
+                    <li>Daily/weekly/monthly</li>
+                    <li>My ranks view</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Family & Agency -->
+    <section>
+        <h2 class="section-title"><span>Family & Agency</span> System</h2>
+        <p class="section-subtitle">Build communities and manage creators</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon blue">👨‍👩‍👧‍👦</div>
+                <h3>Family System</h3>
+                <p>Create and join family groups.</p>
+                <ul>
+                    <li>Create/join families</li>
+                    <li>Family chat rooms</li>
+                    <li>Family leaderboards</li>
+                    <li>Role management (Leader, Moderator, Member)</li>
+                    <li>Family XP pooling</li>
+                    <li>Custom family badges</li>
+                    <li>Family premium tiers</li>
+                    <li>Weekly goals & rewards</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon gold">🏢</div>
+                <h3>Agency System</h3>
+                <p>Professional host management.</p>
+                <ul>
+                    <li>Agency dashboard</li>
+                    <li>Host management</li>
+                    <li>5-tier commission (10-30%)</li>
+                    <li>Earnings tracking</li>
+                    <li>Agency leaderboards</li>
+                    <li>Invitation system</li>
+                    <li>Sub-agency support</li>
+                    <li>Withdrawal requests</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Screenshot Gallery -->
+    <div class="gallery-section">
+        <h2 class="section-title" style="padding: 0 20px;">App <span>Screenshots</span></h2>
+        <p class="section-subtitle" style="padding: 0 20px;">37+ beautiful screens with TikTok-style UI</p>
+        <div class="gallery-container">
+            <div class="gallery-row">
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035714.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035732.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035732.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035819.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035845.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035902.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035929.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035944.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040001.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040057.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035714.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035732.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035732.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035819.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035845.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035902.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035929.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_035944.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040001.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040057.png" alt="Screen"></div>
+            </div>
+            <div class="gallery-row reverse">
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040057.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040228.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040146.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040157.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040228.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040254.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040304.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040315.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040348.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040358.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040057.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040228.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040146.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040157.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040228.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040254.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040304.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040315.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040348.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040358.png" alt="Screen"></div>
+            </div>
+            <div class="gallery-row">
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040408.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040417.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040429.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040442.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040500.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040508.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040520.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040536.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040605.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040618.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040408.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040417.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040429.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040442.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040500.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040508.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040520.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040536.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040605.png" alt="Screen"></div>
+                <div class="gallery-item"><img src="appscreens/Screenshot_20260103_040618.png" alt="Screen"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- All Screens List -->
+    <section>
+        <h2 class="section-title">All <span>37+ Screens</span></h2>
+        <p class="section-subtitle">Complete list of screens included</p>
+        <div class="screens-grid">
+            <div class="screen-item"><div class="num">1</div><span>Login Screen</span></div>
+            <div class="screen-item"><div class="num">2</div><span>Register Screen</span></div>
+            <div class="screen-item"><div class="num">3</div><span>Home Screen (5 Tabs)</span></div>
+            <div class="screen-item"><div class="num">4</div><span>Discover Tab</span></div>
+            <div class="screen-item"><div class="num">5</div><span>Feed Tab</span></div>
+            <div class="screen-item"><div class="num">6</div><span>Messages Tab</span></div>
+            <div class="screen-item"><div class="num">7</div><span>Profile Tab</span></div>
+            <div class="screen-item"><div class="num">8</div><span>Live Room Screen</span></div>
+            <div class="screen-item"><div class="num">9</div><span>Create Live Screen</span></div>
+            <div class="screen-item"><div class="num">10</div><span>Video Call Screen</span></div>
+            <div class="screen-item"><div class="num">11</div><span>Matching Screen</span></div>
+            <div class="screen-item"><div class="num">12</div><span>Voice Room Screen</span></div>
+            <div class="screen-item"><div class="num">13</div><span>Create Voice Room</span></div>
+            <div class="screen-item"><div class="num">14</div><span>Party Room Screen</span></div>
+            <div class="screen-item"><div class="num">15</div><span>Create Party Room</span></div>
+            <div class="screen-item"><div class="num">16</div><span>Leaderboard Screen</span></div>
+            <div class="screen-item"><div class="num">17</div><span>Family List Screen</span></div>
+            <div class="screen-item"><div class="num">18</div><span>Family Detail Screen</span></div>
+            <div class="screen-item"><div class="num">19</div><span>Family Chat Screen</span></div>
+            <div class="screen-item"><div class="num">20</div><span>Family Invitations</span></div>
+            <div class="screen-item"><div class="num">21</div><span>Create Family Screen</span></div>
+            <div class="screen-item"><div class="num">22</div><span>Family Premium Screen</span></div>
+            <div class="screen-item"><div class="num">23</div><span>Family Settings Screen</span></div>
+            <div class="screen-item"><div class="num">24</div><span>Agency Dashboard</span></div>
+            <div class="screen-item"><div class="num">25</div><span>Agency Leaderboard</span></div>
+            <div class="screen-item"><div class="num">26</div><span>Agency Profile</span></div>
+            <div class="screen-item"><div class="num">27</div><span>User Profile Screen</span></div>
+            <div class="screen-item"><div class="num">28</div><span>Edit Profile Screen</span></div>
+            <div class="screen-item"><div class="num">29</div><span>Settings Screen</span></div>
+            <div class="screen-item"><div class="num">30</div><span>Wallet Screen</span></div>
+            <div class="screen-item"><div class="num">31</div><span>Follow List Screen</span></div>
+            <div class="screen-item"><div class="num">32</div><span>Posts/Feed Screen</span></div>
+            <div class="screen-item"><div class="num">33</div><span>Create Post Screen</span></div>
+            <div class="screen-item"><div class="num">34</div><span>Chat Detail Screen</span></div>
+            <div class="screen-item"><div class="num">35</div><span>VIP Screen</span></div>
+            <div class="screen-item"><div class="num">36</div><span>Onboarding Screen</span></div>
+            <div class="screen-item"><div class="num">37</div><span>Splash Screen</span></div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section>
+        <h2 class="section-title">Tech <span>Stack</span></h2>
+        <p class="section-subtitle">Built with modern technologies</p>
+        <div class="tech-grid">
+            <div class="tech-item"><div class="icon">💙</div><h4>Flutter 3.38.5</h4><p>Cross-platform</p></div>
+            <div class="tech-item"><div class="icon">🎥</div><h4>ZEGOCLOUD</h4><p>Video/Audio SDK</p></div>
+            <div class="tech-item"><div class="icon">🔌</div><h4>Socket.IO</h4><p>Real-time</p></div>
+            <div class="tech-item"><div class="icon">🔥</div><h4>Firebase</h4><p>Push & Auth</p></div>
+            <div class="tech-item"><div class="icon">📦</div><h4>Provider</h4><p>State Mgmt</p></div>
+            <div class="tech-item"><div class="icon">🎨</div><h4>Lottie/SVGA</h4><p>Animations</p></div>
+            <div class="tech-item"><div class="icon">🛣️</div><h4>go_router</h4><p>Navigation</p></div>
+            <div class="tech-item"><div class="icon">🔐</div><h4>Google Auth</h4><p>Sign-In</p></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p class="logo" style="font-size: 2rem; margin-bottom: 20px; background: var(--gradient-3); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">TeraLIVE</p>
+        <p>&copy; 2026 TeraLIVE. All rights reserved.</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">teraa.live</p>
+    </footer>
+</body>
+</html>

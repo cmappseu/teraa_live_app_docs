@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeraLIVE API - Complete Backend Solution | Node.js + PostgreSQL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #fe2c55;
+            --secondary: #25f4ee;
+            --accent: #8b5cf6;
+            --bg-dark: #000000;
+            --bg-card: #0d1117;
+            --bg-code: #161b22;
+            --text-primary: #ffffff;
+            --text-secondary: #8b949e;
+            --border: #30363d;
+            --gradient-1: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+        }
+        body { padding-top: 60px; font-family: 'Inter', sans-serif; background: var(--bg-dark); color: var(--text-primary); overflow-x: hidden; line-height: 1.6; }
+
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; padding: 40px 20px; }
+        .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(37, 244, 238, 0.1) 0%, transparent 40%); }
+        .hero-content { position: relative; z-index: 1; text-align: center; max-width: 1200px; }
+        .logo { font-size: 3.5rem; font-weight: 900; margin-bottom: 10px; }
+        .logo span:first-child { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo span:last-child { color: var(--accent); }
+        .tagline { font-size: 1.4rem; color: var(--text-secondary); margin-bottom: 40px; }
+        .hero-badges { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 50px; }
+        .badge { padding: 10px 20px; border-radius: 50px; font-size: 0.9rem; font-weight: 600; }
+        .badge-green { background: #22c55e; color: black; }
+        .badge-purple { background: var(--accent); color: white; }
+        .badge-cyan { background: var(--secondary); color: black; }
+
+        .code-preview { background: var(--bg-code); border-radius: 16px; border: 1px solid var(--border); overflow: hidden; max-width: 900px; margin: 0 auto 60px; text-align: left; }
+        .code-header { background: var(--bg-card); padding: 15px 20px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border); }
+        .code-dots { display: flex; gap: 8px; }
+        .code-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .code-dot.red { background: #ff5f56; }
+        .code-dot.yellow { background: #ffbd2e; }
+        .code-dot.green { background: #27ca40; }
+        .code-body { padding: 20px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; }
+        .code-body .keyword { color: #ff7b72; }
+        .code-body .string { color: #a5d6ff; }
+        .code-body .function { color: #d2a8ff; }
+        .code-body .comment { color: #8b949e; }
+
+        .stats { display: flex; justify-content: center; gap: 50px; margin: 60px 0; flex-wrap: wrap; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 2.5rem; font-weight: 800; background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { color: var(--text-secondary); font-size: 0.95rem; margin-top: 5px; }
+
+        section { padding: 80px 20px; max-width: 1400px; margin: 0 auto; }
+        .section-title { font-size: 2.5rem; font-weight: 800; text-align: center; margin-bottom: 20px; }
+        .section-title span { background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .section-subtitle { text-align: center; color: var(--text-secondary); font-size: 1.1rem; max-width: 700px; margin: 0 auto 50px; }
+
+        .endpoints-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 15px; }
+        .endpoint-card { background: var(--bg-card); border-radius: 12px; padding: 20px; border: 1px solid var(--border); }
+        .endpoint-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .endpoint-method { padding: 4px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+        .method-get { background: #238636; }
+        .method-post { background: #1f6feb; }
+        .method-put { background: #9e6a03; }
+        .method-delete { background: #da3633; }
+        .endpoint-path { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--secondary); }
+        .endpoint-desc { color: var(--text-secondary); font-size: 0.9rem; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .feature-card { background: var(--bg-card); border-radius: 16px; padding: 25px; border: 1px solid var(--border); }
+        .feature-card h3 { font-size: 1.15rem; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        .feature-card p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 10px; }
+        .feature-card ul { color: var(--text-secondary); font-size: 0.85rem; padding-left: 20px; }
+        .feature-card ul li { margin: 4px 0; }
+
+        .tables-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+        .table-card { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
+        .table-header { background: var(--bg-code); padding: 12px 15px; font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.9rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+        .table-header .icon { color: var(--accent); }
+        .table-body { padding: 12px 15px; }
+        .table-field { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.8rem; border-bottom: 1px solid var(--border); }
+        .table-field:last-child { border-bottom: none; }
+        .table-field .name { font-family: 'JetBrains Mono', monospace; color: var(--secondary); }
+        .table-field .type { color: var(--text-secondary); }
+
+        .socket-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+        .socket-item { background: var(--bg-card); border-radius: 10px; padding: 15px; border: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+        .socket-icon { width: 35px; height: 35px; border-radius: 8px; background: rgba(37, 244, 238, 0.2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .socket-name { font-family: 'JetBrains Mono', monospace; color: var(--secondary); font-size: 0.85rem; }
+        .socket-desc { color: var(--text-secondary); font-size: 0.8rem; margin-top: 2px; }
+
+
+        footer { text-align: center; padding: 50px 20px; border-top: 1px solid var(--border); }
+        footer p { color: var(--text-secondary); }
+
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .pricing-features { columns: 1; }
+            .endpoints-grid { grid-template-columns: 1fr; }
+        }
+            /* Documentation Navigation */
+        .doc-nav { position: fixed; top: 0; left: 0; right: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .doc-nav-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 15px 20px; }
+        .doc-nav-logo { font-size: 1.2rem; font-weight: 800; background: linear-gradient(135deg, #fe2c55 0%, #25f4ee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+        .doc-nav-links { display: flex; gap: 5px; flex-wrap: wrap; }
+        .doc-nav-links a { color: #a0a0a0; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; }
+        .doc-nav-links a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+        .doc-nav-links a.active { color: #fe2c55; background: rgba(254,44,85,0.15); }
+    </style>
+</head>
+<body>
+    <nav class="doc-nav"><div class="doc-nav-inner"><a href="index.html" class="doc-nav-logo">TeraLIVE Docs</a><div class="doc-nav-links"><a href="index.html">Setup Guide</a><a href="app.html">Mobile App</a><a href="api.html" class="active">API Reference</a><a href="admin.html">Admin Panel</a><a href="agency.html">Agency Panel</a></div></div></nav>
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="logo"><span>TeraLIVE</span> <span>API</span></h1>
+            <p class="tagline">Production-Ready Backend for Live Streaming Platforms</p>
+            <div class="hero-badges">
+                <span class="badge badge-green">Node.js + Express</span>
+                <span class="badge badge-purple">PostgreSQL</span>
+                <span class="badge badge-cyan">Socket.IO</span>
+            </div>
+            <div class="code-preview">
+                <div class="code-header">
+                    <div class="code-dots"><div class="code-dot red"></div><div class="code-dot yellow"></div><div class="code-dot green"></div></div>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem; margin-left: auto;">server.js</span>
+                </div>
+                <div class="code-body">
+<span class="comment">// TeraLIVE API - Complete Live Streaming Backend</span>
+<span class="keyword">const</span> express = <span class="function">require</span>(<span class="string">'express'</span>);
+<span class="keyword">const</span> { Server } = <span class="function">require</span>(<span class="string">'socket.io'</span>);
+
+<span class="comment">// 100+ REST endpoints, 50+ Socket events</span>
+app.<span class="function">use</span>(<span class="string">'/api/auth'</span>, authRoutes);      <span class="comment">// Authentication</span>
+app.<span class="function">use</span>(<span class="string">'/api/rooms'</span>, roomRoutes);    <span class="comment">// Live rooms</span>
+app.<span class="function">use</span>(<span class="string">'/api/voice-rooms'</span>, voiceRoutes); <span class="comment">// Voice chat</span>
+app.<span class="function">use</span>(<span class="string">'/api/party-rooms'</span>, partyRoutes); <span class="comment">// Party rooms</span>
+app.<span class="function">use</span>(<span class="string">'/api/gifts'</span>, giftRoutes);    <span class="comment">// Gift system</span>
+app.<span class="function">use</span>(<span class="string">'/api/agencies'</span>, agencyRoutes); <span class="comment">// Agency system</span>
+app.<span class="function">use</span>(<span class="string">'/api/families'</span>, familyRoutes); <span class="comment">// Family system</span>
+app.<span class="function">use</span>(<span class="string">'/api/admin'</span>, adminRoutes);    <span class="comment">// Admin panel</span>
+                </div>
+            </div>
+            <div class="stats">
+                <div class="stat-item"><div class="stat-value">100+</div><div class="stat-label">API Endpoints</div></div>
+                <div class="stat-item"><div class="stat-value">50+</div><div class="stat-label">Socket Events</div></div>
+                <div class="stat-item"><div class="stat-value">25+</div><div class="stat-label">Database Tables</div></div>
+                <div class="stat-item"><div class="stat-value">5</div><div class="stat-label">Services</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Features -->
+    <section>
+        <h2 class="section-title">Core <span>Features</span></h2>
+        <p class="section-subtitle">Everything you need for a complete live streaming backend</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>🔐 Authentication</h3>
+                <p>Complete auth system with multiple methods</p>
+                <ul>
+                    <li>Email/password registration & login</li>
+                    <li>Google Sign-In OAuth integration</li>
+                    <li>JWT tokens with refresh</li>
+                    <li>Password hashing (bcrypt)</li>
+                    <li>Session management</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>🎬 Live Rooms</h3>
+                <p>Full live streaming room management</p>
+                <ul>
+                    <li>Create/join/leave rooms</li>
+                    <li>Viewer tracking & counts</li>
+                    <li>Private rooms with password</li>
+                    <li>Paid rooms with coin entry</li>
+                    <li>Mute/kick/ban users</li>
+                    <li>Join request system</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>🎤 Voice Rooms</h3>
+                <p>Multi-seat audio chat rooms</p>
+                <ul>
+                    <li>Up to 8 seats per room</li>
+                    <li>Seat lock/unlock controls</li>
+                    <li>Mute individual seats</li>
+                    <li>Kick from seat</li>
+                    <li>Private/paid options</li>
+                    <li>Background customization</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>🎉 Party Rooms</h3>
+                <p>Group video chat (4-8 participants)</p>
+                <ul>
+                    <li>Video grid layout support</li>
+                    <li>Camera/mic toggle</li>
+                    <li>Host moderation tools</li>
+                    <li>Viewer mode</li>
+                    <li>Join request approval</li>
+                    <li>WebRTC signaling</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>🎁 Gift System</h3>
+                <p>Complete virtual gift economy</p>
+                <ul>
+                    <li>Gift catalog CRUD</li>
+                    <li>Send gifts with animations</li>
+                    <li>Coin wallet management</li>
+                    <li>Coin packages & purchase</li>
+                    <li>Transaction history</li>
+                    <li>Revenue tracking</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>⚔️ PK Battles</h3>
+                <p>Streamer competition system</p>
+                <ul>
+                    <li>Challenge system</li>
+                    <li>Accept/decline flow</li>
+                    <li>Real-time scoring</li>
+                    <li>5-minute battles</li>
+                    <li>Winner determination</li>
+                    <li>Battle history</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>👨‍👩‍👧‍👦 Family System</h3>
+                <p>Community groups with hierarchy</p>
+                <ul>
+                    <li>Create/manage families</li>
+                    <li>Role system (Leader, Admin, Elder, Member)</li>
+                    <li>Family chat rooms</li>
+                    <li>XP & level progression</li>
+                    <li>Weekly goals & bonuses</li>
+                    <li>Premium tiers (Bronze-Diamond)</li>
+                    <li>Leaderboards & rankings</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>🏢 Agency System</h3>
+                <p>Professional host management</p>
+                <ul>
+                    <li>5-tier commission (10-30%)</li>
+                    <li>Host management</li>
+                    <li>Earnings tracking</li>
+                    <li>Withdrawal requests</li>
+                    <li>Sub-agency support</li>
+                    <li>Goals & achievements</li>
+                    <li>Agency leaderboards</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>📱 Social Feed</h3>
+                <p>TikTok-style posts system</p>
+                <ul>
+                    <li>Create text/photo/video posts</li>
+                    <li>Like, comment, save</li>
+                    <li>Paid content unlock</li>
+                    <li>Trending & featured</li>
+                    <li>Comment likes & replies</li>
+                    <li>Report system</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>💬 Messaging</h3>
+                <p>Private chat system</p>
+                <ul>
+                    <li>1-on-1 conversations</li>
+                    <li>Message history</li>
+                    <li>Unread counts</li>
+                    <li>Mark as read</li>
+                    <li>Delete conversations</li>
+                    <li>Real-time delivery</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>👑 VIP System</h3>
+                <p>Premium membership tiers</p>
+                <ul>
+                    <li>Multiple VIP packages</li>
+                    <li>Coin & USD pricing</li>
+                    <li>Duration-based (7-365 days)</li>
+                    <li>Daily bonus claims</li>
+                    <li>XP experience tracking</li>
+                    <li>Level requirements</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <h3>🔔 Notifications</h3>
+                <p>Push notification system</p>
+                <ul>
+                    <li>Firebase FCM integration</li>
+                    <li>Device token management</li>
+                    <li>Topic subscriptions</li>
+                    <li>Notification preferences</li>
+                    <li>Admin broadcast</li>
+                    <li>Notification history</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- API Endpoints Sample -->
+    <section>
+        <h2 class="section-title">Sample <span>Endpoints</span></h2>
+        <p class="section-subtitle">100+ REST API endpoints across all modules</p>
+        <div class="endpoints-grid">
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/api/auth/register</span></div><p class="endpoint-desc">User registration with validation</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/api/auth/google</span></div><p class="endpoint-desc">Google Sign-In authentication</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/api/rooms</span></div><p class="endpoint-desc">List all live rooms with pagination</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/api/rooms/:id/join</span></div><p class="endpoint-desc">Join live room, get ZEGO token</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/api/gifts/send</span></div><p class="endpoint-desc">Send gift with Socket broadcast</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/api/pk/challenge</span></div><p class="endpoint-desc">Initiate PK battle challenge</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/api/families/:id/chat/messages</span></div><p class="endpoint-desc">Get family chat history</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/api/agency-panel/withdrawals</span></div><p class="endpoint-desc">Request agency withdrawal</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/api/posts/feed</span></div><p class="endpoint-desc">Get public posts feed</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-post">POST</span><span class="endpoint-path">/api/posts/:id/unlock</span></div><p class="endpoint-desc">Unlock paid post content</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-get">GET</span><span class="endpoint-path">/api/leaderboard/gifters</span></div><p class="endpoint-desc">Top gift senders ranking</p></div>
+            <div class="endpoint-card"><div class="endpoint-header"><span class="endpoint-method method-put">PUT</span><span class="endpoint-path">/api/admin/users/:id</span></div><p class="endpoint-desc">Admin update user details</p></div>
+        </div>
+    </section>
+
+    <!-- Socket Events -->
+    <section>
+        <h2 class="section-title">Socket.IO <span>Events</span></h2>
+        <p class="section-subtitle">50+ real-time events for live features</p>
+        <div class="socket-grid">
+            <div class="socket-item"><div class="socket-icon">🚀</div><div><div class="socket-name">join_room</div><div class="socket-desc">Join live room</div></div></div>
+            <div class="socket-item"><div class="socket-icon">🎁</div><div><div class="socket-name">gift_sent</div><div class="socket-desc">Gift animation broadcast</div></div></div>
+            <div class="socket-item"><div class="socket-icon">💬</div><div><div class="socket-name">chat_message</div><div class="socket-desc">Room chat message</div></div></div>
+            <div class="socket-item"><div class="socket-icon">⚔️</div><div><div class="socket-name">pk_score_update</div><div class="socket-desc">Real-time PK score</div></div></div>
+            <div class="socket-item"><div class="socket-icon">🪑</div><div><div class="socket-name">seat_updated</div><div class="socket-desc">Voice room seat change</div></div></div>
+            <div class="socket-item"><div class="socket-icon">👥</div><div><div class="socket-name">viewer_count</div><div class="socket-desc">Live viewer update</div></div></div>
+            <div class="socket-item"><div class="socket-icon">📩</div><div><div class="socket-name">room_invitation</div><div class="socket-desc">Room invite notification</div></div></div>
+            <div class="socket-item"><div class="socket-icon">🎵</div><div><div class="socket-name">dj_track_changed</div><div class="socket-desc">DJ mode track sync</div></div></div>
+            <div class="socket-item"><div class="socket-icon">👨‍👩‍👧</div><div><div class="socket-name">family_level_up</div><div class="socket-desc">Family level notification</div></div></div>
+            <div class="socket-item"><div class="socket-icon">💰</div><div><div class="socket-name">agency_earning</div><div class="socket-desc">Agency earning update</div></div></div>
+            <div class="socket-item"><div class="socket-icon">🔔</div><div><div class="socket-name">notification</div><div class="socket-desc">Push notification</div></div></div>
+            <div class="socket-item"><div class="socket-icon">🟢</div><div><div class="socket-name">user_online</div><div class="socket-desc">Online status change</div></div></div>
+        </div>
+    </section>
+
+    <!-- Database Tables -->
+    <section>
+        <h2 class="section-title">Database <span>Schema</span></h2>
+        <p class="section-subtitle">25+ PostgreSQL tables with optimized indexes</p>
+        <div class="tables-grid">
+            <div class="table-card"><div class="table-header"><span class="icon">👤</span> users</div><div class="table-body"><div class="table-field"><span class="name">id</span><span class="type">UUID</span></div><div class="table-field"><span class="name">username</span><span class="type">VARCHAR</span></div><div class="table-field"><span class="name">email</span><span class="type">VARCHAR</span></div><div class="table-field"><span class="name">coins</span><span class="type">DECIMAL</span></div><div class="table-field"><span class="name">level</span><span class="type">INTEGER</span></div><div class="table-field"><span class="name">vip_tier</span><span class="type">ENUM</span></div></div></div>
+            <div class="table-card"><div class="table-header"><span class="icon">🎬</span> live_rooms</div><div class="table-body"><div class="table-field"><span class="name">id</span><span class="type">UUID</span></div><div class="table-field"><span class="name">host_id</span><span class="type">UUID FK</span></div><div class="table-field"><span class="name">title</span><span class="type">VARCHAR</span></div><div class="table-field"><span class="name">viewer_count</span><span class="type">INTEGER</span></div><div class="table-field"><span class="name">is_pk_active</span><span class="type">BOOLEAN</span></div></div></div>
+            <div class="table-card"><div class="table-header"><span class="icon">🎁</span> gift_transactions</div><div class="table-body"><div class="table-field"><span class="name">sender_id</span><span class="type">UUID FK</span></div><div class="table-field"><span class="name">receiver_id</span><span class="type">UUID FK</span></div><div class="table-field"><span class="name">gift_id</span><span class="type">UUID FK</span></div><div class="table-field"><span class="name">amount</span><span class="type">INTEGER</span></div><div class="table-field"><span class="name">coins</span><span class="type">DECIMAL</span></div></div></div>
+            <div class="table-card"><div class="table-header"><span class="icon">🏢</span> agencies</div><div class="table-body"><div class="table-field"><span class="name">name</span><span class="type">VARCHAR</span></div><div class="table-field"><span class="name">tier</span><span class="type">ENUM</span></div><div class="table-field"><span class="name">commission_rate</span><span class="type">DECIMAL</span></div><div class="table-field"><span class="name">total_earnings</span><span class="type">DECIMAL</span></div><div class="table-field"><span class="name">host_count</span><span class="type">INTEGER</span></div></div></div>
+            <div class="table-card"><div class="table-header"><span class="icon">👨‍👩‍👧</span> families</div><div class="table-body"><div class="table-field"><span class="name">name</span><span class="type">VARCHAR</span></div><div class="table-field"><span class="name">level</span><span class="type">INTEGER</span></div><div class="table-field"><span class="name">total_xp</span><span class="type">BIGINT</span></div><div class="table-field"><span class="name">member_count</span><span class="type">INTEGER</span></div><div class="table-field"><span class="name">is_premium</span><span class="type">BOOLEAN</span></div></div></div>
+            <div class="table-card"><div class="table-header"><span class="icon">📱</span> posts</div><div class="table-body"><div class="table-field"><span class="name">user_id</span><span class="type">UUID FK</span></div><div class="table-field"><span class="name">content</span><span class="type">TEXT</span></div><div class="table-field"><span class="name">media_url</span><span class="type">VARCHAR</span></div><div class="table-field"><span class="name">like_count</span><span class="type">INTEGER</span></div><div class="table-field"><span class="name">is_paid</span><span class="type">BOOLEAN</span></div></div></div>
+        </div>
+        <p style="text-align: center; margin-top: 30px; color: var(--text-secondary);">+ 19 more tables: voice_rooms, party_rooms, pk_battles, family_members, agency_members, agency_earnings, agency_withdrawals, posts_comments, notifications, and more...</p>
+    </section>
+
+    <footer>
+        <p class="logo" style="font-size: 1.8rem; margin-bottom: 15px;"><span style="background: var(--gradient-1); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">TeraLIVE</span> <span style="color: var(--accent);">API</span></p>
+        <p>&copy; 2026 TeraLIVE. All rights reserved. | teraa.live</p>
+    </footer>
+</body>
+</html>
