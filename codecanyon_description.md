@@ -127,7 +127,7 @@ TeraLIVE is a complete live streaming and social platform with Flutter mobile ap
 ### Tags (comma separated)
 
 ```
-live streaming, flutter app, social app, video chat, voice room, tiktok clone, live video, react admin, nodejs api, postgresql, socket.io, virtual gifts, vip system, agency system, mobile app, ios app, android app, zegocloud, firebase, real-time chat
+live streaming, flutter app, social app, video chat, voice room, tiktok clone, live video, react admin, nodejs api, virtual gifts, vip system, agency system, mobile app, firebase, real-time chat
 ```
 
 ---
