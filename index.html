@@ -576,6 +576,45 @@
             h2 {
                 font-size: 1.5rem;
             }
+
+            /* Responsive Demo Sections */
+            .download-section,
+            .demo-panels-section {
+                padding: 25px 15px !important;
+                margin: 25px 0 !important;
+            }
+
+            .download-section h3,
+            .demo-panels-section h3 {
+                font-size: 1.2rem !important;
+            }
+
+            .demo-buttons,
+            .demo-credentials {
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            .demo-btn,
+            .demo-buttons > a > div,
+            .download-section > div > a > div {
+                min-width: 100% !important;
+                max-width: 300px !important;
+            }
+
+            .demo-credentials > div {
+                min-width: 100% !important;
+                max-width: 300px !important;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            .phones-grid {
+                flex-direction: column !important;
+                align-items: center !important;
+            }
         }
 
         /* Screenshots */
@@ -945,10 +984,10 @@
                         <p style="color: #8b949e; font-size: 0.95rem; max-width: 500px; margin: 0 auto;">Explore our fully functional admin and agency dashboards with live data.</p>
                     </div>
 
-                    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                    <div class="demo-buttons" style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
                         <!-- Admin Panel -->
                         <a href="https://admin.teraa.live" target="_blank" style="text-decoration: none;">
-                            <div style="display: flex; align-items: center; gap: 15px; background: linear-gradient(135deg, #fe2c55 0%, #8b5cf6 100%); padding: 18px 30px; border-radius: 14px; transition: all 0.3s; cursor: pointer; min-width: 220px;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(254, 44, 85, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <div class="demo-btn" style="display: flex; align-items: center; gap: 15px; background: linear-gradient(135deg, #fe2c55 0%, #8b5cf6 100%); padding: 18px 30px; border-radius: 14px; transition: all 0.3s; cursor: pointer; min-width: 220px;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(254, 44, 85, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                                 <span style="font-size: 2rem;">🖥️</span>
                                 <div>
                                     <div style="color: rgba(255,255,255,0.8); font-size: 0.75rem; font-weight: 500;">LIVE DEMO</div>
@@ -959,7 +998,7 @@
 
                         <!-- Agency Panel -->
                         <a href="https://agency.teraa.live" target="_blank" style="text-decoration: none;">
-                            <div style="display: flex; align-items: center; gap: 15px; background: linear-gradient(135deg, #25f4ee 0%, #8b5cf6 100%); padding: 18px 30px; border-radius: 14px; transition: all 0.3s; cursor: pointer; min-width: 220px;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(37, 244, 238, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <div class="demo-btn" style="display: flex; align-items: center; gap: 15px; background: linear-gradient(135deg, #25f4ee 0%, #8b5cf6 100%); padding: 18px 30px; border-radius: 14px; transition: all 0.3s; cursor: pointer; min-width: 220px;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 30px rgba(37, 244, 238, 0.3)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                                 <span style="font-size: 2rem;">🏢</span>
                                 <div>
                                     <div style="color: rgba(255,255,255,0.8); font-size: 0.75rem; font-weight: 500;">LIVE DEMO</div>
@@ -967,6 +1006,20 @@
                                 </div>
                             </div>
                         </a>
+                    </div>
+
+                    <!-- Demo Credentials -->
+                    <div class="demo-credentials" style="margin-top: 30px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(254, 44, 85, 0.3); border-radius: 12px; padding: 15px 25px; text-align: center; min-width: 200px;">
+                            <div style="color: #fe2c55; font-size: 0.75rem; font-weight: 600; margin-bottom: 8px;">ADMIN CREDENTIALS</div>
+                            <div style="color: #fff; font-size: 0.9rem;"><strong>Email:</strong> admin@teraa.live</div>
+                            <div style="color: #fff; font-size: 0.9rem;"><strong>Password:</strong> Admin123!</div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); border: 1px solid rgba(37, 244, 238, 0.3); border-radius: 12px; padding: 15px 25px; text-align: center; min-width: 200px;">
+                            <div style="color: #25f4ee; font-size: 0.75rem; font-weight: 600; margin-bottom: 8px;">AGENCY CREDENTIALS</div>
+                            <div style="color: #fff; font-size: 0.9rem;"><strong>Email:</strong> agency@teraa.live</div>
+                            <div style="color: #fff; font-size: 0.9rem;"><strong>Password:</strong> 123456</div>
+                        </div>
                     </div>
                 </div>
 
